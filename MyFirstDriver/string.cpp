@@ -17,25 +17,45 @@ void wcstombs(char* dst, wchar_t* src, size_t len) {
 	}
 }
 
+string::string()
+{
+	len = 0;
+	pBuffer = nullptr;
+}
+
 string::string(const char* pString) {
 	len = strlen(pString);
-	pBuffer = (char*)kMalloc((size_t)len + 1);
+	pBuffer = (char*)kMalloc((size_t)len + 1, 'tSyM');
 	strcpy((char*)pBuffer, pString);
+}
+
+string::string(string& obj)
+{
+	len = obj.len;
+	pBuffer = obj.pBuffer;
 }
 
 void string::Dispose()
 {
-	kDelete((void*)pBuffer);
-	kDelete((void*)this);
+	if (pBuffer != nullptr) {
+		DbgMsg("Disposing of string %s \n", pBuffer);
+		kDelete((void*)pBuffer);
+		pBuffer = nullptr;
+	}
 }
 
 string* string::create(const char* pString)
 {
-	auto pNewString = (string*)kMalloc((size_t)sizeof(string));
+	auto pNewString = (string*)kMalloc((size_t)sizeof(string), 'tSyM');
 	pNewString->len = strlen(pString);
 	pNewString->pBuffer = (char*)kMalloc((size_t)pNewString->len + 1);
 	strcpy((char*)pNewString->pBuffer, pString);
 	return pNewString;
+}
+
+string::~string()
+{
+	Dispose();
 }
 
 UNICODE_STRING string::unicode()
@@ -81,4 +101,8 @@ int string::last_of(char to_find)
 			return i;
 	}
 	return 0;
+}
+
+const char* string::c_str() {
+	return pBuffer;
 }

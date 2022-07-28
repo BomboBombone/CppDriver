@@ -1,6 +1,7 @@
 #include "cpp.h"
+#include "collector.h"
 
-void* kMalloc(size_t size, POOL_TYPE pool_type)
+void* kMalloc(size_t size, POOL_TYPE pool_type, bool collect)
 {
     void* p;
 #ifndef DRIVER_TAG
@@ -12,19 +13,31 @@ void* kMalloc(size_t size, POOL_TYPE pool_type)
     if (p == nullptr) {
         DbgMsg("Failed to allocate %d bytes\n", (int)size);
     }
+    if (collect)
+        Collector::Add(p);
     return p;
 }
 
-void* kNew(void* p)
+void* kMalloc(size_t size, int sig, bool collect)
 {
+    void* p;
+    p = ExAllocatePoolWithTag(NonPagedPool, size, sig);
+
+    if (p == nullptr) {
+        DbgMsg("Failed to allocate %d bytes\n", (int)size);
+    }
+    if (collect)
+        Collector::Add(p);
     return p;
 }
 
-void kDelete(void* pObj)
+void* operator new(size_t /* ignored */, void* where) { return where; };
+
+void kDelete(void* pObj, bool collect)
 {
-#ifndef DRIVER_TAG
     ExFreePool(pObj);
-#else
-    ExFreePoolWithTag(pObj, DRIVER_TAG);
-#endif
+
+    if(collect)
+        Collector::Remove(pObj);
 }
+

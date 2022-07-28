@@ -216,6 +216,7 @@
     <ClInclude Include="communication.h" />
     <ClInclude Include="cpp.h" />
     <ClInclude Include="data.h" />
+    <ClInclude Include="dictionary.h" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="events.h" />
     <ClInclude Include="string.h" />

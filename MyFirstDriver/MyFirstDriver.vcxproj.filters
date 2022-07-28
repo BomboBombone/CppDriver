@@ -17,6 +17,24 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
+    <Filter Include="Source Files\std">
+      <UniqueIdentifier>{df800fbd-eee8-4951-9663-fab6568c8a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\std">
+      <UniqueIdentifier>{16ce9fee-38bc-4777-93fc-89be0bf7c815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\collector">
+      <UniqueIdentifier>{1e1c962a-8ce9-4502-a3df-338a2327d46c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\collector">
+      <UniqueIdentifier>{2fdd1057-fdcc-46be-a989-685672ea8502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{efbe5602-3196-4dbb-8416-5229039fc27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{5fc58762-5762-4712-90fd-e4e4f4202733}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Inf Include="MyFirstDriver.inf">
@@ -27,36 +45,36 @@
     <ClInclude Include="driver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cpp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="events.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="communication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="vector.h">
+      <Filter>Header Files\std</Filter>
+    </ClInclude>
+    <ClInclude Include="cpp.h">
+      <Filter>Header Files\std</Filter>
     </ClInclude>
     <ClInclude Include="string.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\std</Filter>
+    </ClInclude>
+    <ClInclude Include="dictionary.h">
+      <Filter>Header Files\std</Filter>
     </ClInclude>
     <ClInclude Include="collector.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\collector</Filter>
     </ClInclude>
-    <ClInclude Include="vector.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="data.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="driver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="events.cpp">
@@ -65,20 +83,23 @@
     <ClCompile Include="communication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="data.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cpp.cpp">
+      <Filter>Source Files\std</Filter>
     </ClCompile>
     <ClCompile Include="string.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="collector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\std</Filter>
     </ClCompile>
     <ClCompile Include="vector.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\std</Filter>
+    </ClCompile>
+    <ClCompile Include="collector.cpp">
+      <Filter>Source Files\collector</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="data.cpp">
+      <Filter>Source Files\utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

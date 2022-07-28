@@ -1,10 +1,14 @@
 #pragma once
 
-#include "cpp.h"
+#include "vector.h"
 
-class collector
-{
-	collector(int reserved_entries = 32);
-	~collector();
+//Implements shit for disposing of unused memory
+struct Collector {
+private:
+	static vector<void*>* myGarbage;
+public:
+	static void Init();
+	static void Add(void* p);
+	static void Remove(void* p);
+	static void Clean();
 };
-

@@ -4,7 +4,7 @@ UNICODE_STRING GetModuleNameFromPath(PUNICODE_STRING path)
 {
 	UNICODE_STRING s;
 	
-	char* char_arr = (char*)kMalloc((size_t)path->Length + 1);
+	char* char_arr = (char*)kMalloc((size_t)path->Length + 1, NonPagedPool, false);
 	wcstombs(char_arr, path->Buffer, (size_t)path->Length);
 	string* full_path = string::create(char_arr);
 
@@ -16,7 +16,9 @@ UNICODE_STRING GetModuleNameFromPath(PUNICODE_STRING path)
 
 	full_path->Dispose();
 	modName->Dispose();
-	kDelete(char_arr);
+	kDelete(full_path);
+	kDelete(modName);
+	kDelete(char_arr, false);
 
 	return s;
 }

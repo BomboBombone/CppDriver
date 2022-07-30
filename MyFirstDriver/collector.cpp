@@ -11,13 +11,13 @@ void Collector::Init()
 void Collector::Add(void* p)
 {
 	myGarbage->emplace_back<void*>(p, false);
-	DbgMsg("Created new object %d \n", (size_t)p);
+	//DbgMsg("Created new object %d \n", (size_t)p);
 }
 
 void Collector::Remove(void* p)
 {
 	myGarbage->Remove(p, false);
-	DbgMsg("Destroyed object %d \n", (size_t)p);
+	//DbgMsg("Destroyed object %d \n", (size_t)p);
 }
 
 void Collector::Clean()
@@ -29,7 +29,7 @@ void Collector::Clean()
 		auto nextNode = curNode->fLink;
 		kDelete(curNode->obj, false);
 		kDelete(curNode, false);
-		DbgMsg("Deleted object at %d \n", (size_t)curNode->obj);
+		//DbgMsg("Deleted object at %d \n", (size_t)curNode->obj);
 		curNode = nextNode;
 	}
 	DbgMsg("Disposed of leaked memory\n");

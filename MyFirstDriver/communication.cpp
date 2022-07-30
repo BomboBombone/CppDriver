@@ -1,58 +1,51 @@
 #include "communication.h"
 
 #include <Shared/macros.h>
+#include <Shared/message.h>
 
-NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+NTSTATUS Function_IRP_MJ_CREATE(PDEVICE_OBJECT pDeviceObject, PIRP Irp)
 {
-    UNREFERENCED_PARAMETER(DeviceObject);
+    UNREFERENCED_PARAMETER(Irp);
+    UNREFERENCED_PARAMETER(pDeviceObject);
 
-    Irp->IoStatus.Status = STATUS_SUCCESS;
-    Irp->IoStatus.Information = 0;
-
-    IoCompleteRequest(Irp, IO_NO_INCREMENT);
-
-    DbgMsg("CreateCall called, connection enstablished!\n");
-
+    DbgMsg("IRP MJ CREATE received.");
     return STATUS_SUCCESS;
 }
 
-NTSTATUS CloseCall(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+NTSTATUS Function_IRP_MJ_CLOSE(PDEVICE_OBJECT pDeviceObject, PIRP Irp)
 {
-    UNREFERENCED_PARAMETER(DeviceObject);
+    UNREFERENCED_PARAMETER(Irp);
+    UNREFERENCED_PARAMETER(pDeviceObject);
 
-    Irp->IoStatus.Status = STATUS_SUCCESS;
-    Irp->IoStatus.Information = 0;
-
-    IoCompleteRequest(Irp, IO_NO_INCREMENT);
-
-    DbgMsg("Connection terminated!\n");
-
+    DbgMsg("IRP MJ CLOSE received.");
     return STATUS_SUCCESS;
 }
 
-NTSTATUS CreateCall(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+NTSTATUS Function_IRP_DEVICE_CONTROL(PDEVICE_OBJECT pDeviceObject, PIRP Irp)
 {
-    UNREFERENCED_PARAMETER(DeviceObject);
+    UNREFERENCED_PARAMETER(pDeviceObject);
 
-    NTSTATUS Status = STATUS_UNSUCCESSFUL;
-    ULONG ByteIO = 0;
+    PIO_STACK_LOCATION pIoStackLocation;
+    Message<void*> Res((void*)globals::ModuleAddress);
+    Message<MESSAGE_TYPE>* pMes = (Message<MESSAGE_TYPE>*) Irp->AssociatedIrp.SystemBuffer;
 
-    PIO_STACK_LOCATION stack = IoGetCurrentIrpStackLocation(Irp);
+    pIoStackLocation = IoGetCurrentIrpStackLocation(Irp);
+    switch (pIoStackLocation->Parameters.DeviceIoControl.IoControlCode)
+    {
+    case IO_GET_MODULE_ADDRESS:
+        DbgMsg("Message received : %d", pMes->msg);
 
-    ULONG ControlCode = stack->Parameters.DeviceIoControl.IoControlCode;
-    if (ControlCode == IO_GET_CLIENT_ADDRESS) {
-        PULONGLONG OutPut = (PULONGLONG)Irp->AssociatedIrp.SystemBuffer;
-        *OutPut = globals::ModuleAddress;
+        RtlZeroMemory(pMes, pIoStackLocation->Parameters.DeviceIoControl.InputBufferLength);
+        RtlCopyMemory(pMes, &Res, sizeof(Res));
 
-        DbgMsg("ModuleAddress requested\n");
-
-        Status = STATUS_SUCCESS;
-        ByteIO = sizeof(*OutPut);
+        break;
     }
 
-    Irp->IoStatus.Status = Status;
-    Irp->IoStatus.Information = ByteIO;
+    // Finish the I/O operation by simply completing the packet and returning
+    // the same status as in the packet itself.
+    Irp->IoStatus.Status = STATUS_SUCCESS;
+    Irp->IoStatus.Information = sizeof(Res);
     IoCompleteRequest(Irp, IO_NO_INCREMENT);
 
-    return Status;
+    return STATUS_SUCCESS;
 }

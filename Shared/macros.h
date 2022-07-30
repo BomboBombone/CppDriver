@@ -25,4 +25,10 @@
 //Constants
 #define DRIVER_TAG 'rDyM' 
 #define DRIVER_NAME "MyDriv"
+#define DRIVER_LNK_NAME "MyDrivLnk"
 #define MODULE_TO_FIND L"ntdll.dll"
+
+//Define
+#define SIOCTL_TYPE 40000
+#define IOCTL_HELLO\
+ CTL_CODE( SIOCTL_TYPE, 0x800, METHOD_BUFFERED, FILE_READ_DATA|FILE_WRITE_DATA)

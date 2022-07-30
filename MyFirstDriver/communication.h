@@ -1,10 +1,10 @@
 #pragma once
 #include <ntifs.h>
+#include <Shared/message.h>
 
 #include "data.h"
 
-#define IO_GET_CLIENT_ADDRESS CTL_CODE(FILE_DEVICE_UNKNOWN, 0x666, METHOD_BUFFERED, FILE_SPECIAL_ACCESS)
-
-NTSTATUS IoControl(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS CloseCall(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS CreateCall(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+NTSTATUS Function_IRP_MJ_CREATE(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+NTSTATUS Function_IRP_MJ_CLOSE(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+NTSTATUS Function_IRP_DEVICE_CONTROL(PDEVICE_OBJECT DeviceObject, PIRP Irp);
+//NTSTATUS DispatchPassThru(PDEVICE_OBJECT DeviceObject, PIRP Irp);

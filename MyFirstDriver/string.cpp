@@ -38,7 +38,7 @@ string::string(string& obj)
 void string::Dispose()
 {
 	if (pBuffer != nullptr) {
-		DbgMsg("Disposing of string %s \n", pBuffer);
+		//DbgMsg("Disposing of string %s \n", pBuffer);
 		kDelete((void*)pBuffer);
 		pBuffer = nullptr;
 	}

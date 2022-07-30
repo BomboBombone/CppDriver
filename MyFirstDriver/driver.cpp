@@ -16,32 +16,32 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath
 
     Collector::Init();
 
-    string mystr("Hello ");
-    string mystr1 = mystr + "world!";
-    DbgMsg(mystr1.c_str());
+    globals::Init();
 
-    //kDelete((void*)&str2);
+    PsSetLoadImageNotifyRoutine(ImageLoadCallback);
 
-    //PsSetLoadImageNotifyRoutine(ImageLoadCallback);
-
-    //RtlInitUnicodeString(globals::dev, L"\\Device\\" DRIVER_NAME);
-    //RtlInitUnicodeString(globals::dos, L"\\DosDevices\\" DRIVER_NAME);
+    IoCreateDevice(pDriverObject,
+        0, // For driver extension
+        globals::dos,
+        FILE_DEVICE_UNKNOWN,
+        FILE_DEVICE_UNKNOWN,
+        FALSE,
+        &globals::pDeviceObject);
+    IoCreateSymbolicLink(globals::dos, globals::dev);
     
-    //IoCreateDevice(pDriverObject, 0, globals::dev, FILE_DEVICE_UNKNOWN, FILE_DEVICE_SECURE_OPEN, FALSE, &globals::pDeviceObject);
-    //IoCreateSymbolicLink(globals::dos, globals::dev);
-    
-    //pDriverObject->MajorFunction[IRP_MJ_CREATE] = CreateCall;
-    //pDriverObject->MajorFunction[IRP_MJ_CLOSE] = CloseCall;
-    //pDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = IoControl;
-    
-    //if (globals::pDeviceObject) {
-    //    globals::pDeviceObject->Flags |= DO_DIRECT_IO;
-    //    globals::pDeviceObject->Flags &= ~DO_DEVICE_INITIALIZING;
-    //    DbgMsg("Device Object initialized\n");
+    //for (int i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; i++) {
+    //    pDriverObject->MajorFunction[i] = DispatchPassThru;
     //}
-    //else {
-    //    DbgMsg("Device Object could not be initialized\n");
-    //}
+    pDriverObject->MajorFunction[IRP_MJ_CREATE] = Function_IRP_MJ_CREATE;
+    pDriverObject->MajorFunction[IRP_MJ_CLOSE] = Function_IRP_MJ_CLOSE;
+    pDriverObject->MajorFunction[IRP_MJ_DEVICE_CONTROL] = Function_IRP_DEVICE_CONTROL;
+    
+    if (globals::pDeviceObject) {
+        DbgMsg("Device Object initialized\n");
+    }
+    else {
+        DbgMsg("Device Object could not be initialized\n");
+    }
 
     return STATUS_SUCCESS;
 }
@@ -52,10 +52,12 @@ NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject)
 
     DbgMsg("Driver unloading...\n");
 
-    //PsRemoveLoadImageNotifyRoutine(ImageLoadCallback);
+    PsRemoveLoadImageNotifyRoutine(ImageLoadCallback);
 
-    //IoDeleteSymbolicLink(globals::dos);
-    //IoDeleteDevice(pDriverObject->DeviceObject);
+    DbgMsg("Removed image notify callback\n");
+
+    IoDeleteSymbolicLink(globals::dos);
+    IoDeleteDevice(pDriverObject->DeviceObject);
 
     Collector::Clean();
 
